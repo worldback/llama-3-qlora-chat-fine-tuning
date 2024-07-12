@@ -7,7 +7,7 @@
 数据来源是hugging face上的数据集：stingning/ultrachat
 经过过滤后，得到的数据。具体处理过程参考 preprocess_data.ipynb。
 
-处理的数据百度云链接:    [data](链接：https://pan.baidu.com/s/15fESwenH6N9ICUTtKlMoFQ?pwd=744w)  
+处理的数据百度云链接:    [data](https://pan.baidu.com/s/15fESwenH6N9ICUTtKlMoFQ?pwd=744w)   
 
 ## 训练
 
