@@ -1,0 +1,9 @@
+transformers
+datasets
+torch
+peft
+trl
+deepspeed
+accelerate
+flash-attn
+wandb
