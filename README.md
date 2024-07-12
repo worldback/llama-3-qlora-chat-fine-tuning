@@ -70,5 +70,5 @@ python test.py --path your-fine-tuning-model-path
 
 ## 参考
 
-https://medium.com/@xuebinbin12/fine-tuning-chat-based-llm-with-multi-turn-conversational-data-part-i-d8c64d01a20d 
+https://medium.com/@xuebinbin12/fine-tuning-chat-based-llm-with-multi-turn-conversational-data-part-i-d8c64d01a20d   
 https://github.com/pacman100/LLM-Workshop.git
