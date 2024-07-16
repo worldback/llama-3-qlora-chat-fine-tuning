@@ -14,7 +14,7 @@
 先安装环境:
 pip install -r requirementx.txt
 
-在2块A800-80G上运行:
+在4块A800-80G上运行:
 
 ```
 accelerate launch --config_file deepspeed_config_z3_qlora.yaml  train.py \
@@ -65,7 +65,7 @@ model_name_or_path： 由于utils.py中只针对llama-3设定了chat_template, �
 
 在deepspeed_config_z3_qlora.yaml 修改num_processes为GPU数量。   
 
-大概需要7h。 
+大概需要13h。 
 
 ## 测试
 
