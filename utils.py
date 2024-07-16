@@ -25,33 +25,34 @@ class ChatMlSpecialTokens:
 
     @property
     def system(self):
-        return f"{self.rbos_token}system{self.reos_token}"
+        return "system"
 
     @property
     def user(self):
-        return f"{self.rbos_token}user{self.reos_token}"
+        return "user"
 
     @property
     def assistant(self):
-        return f"{self.rbos_token}assistant{self.reos_token}"
+        return "assistant"
 
     @property
     def chat_template(self):
         return (
             "{% for message in messages %}"
-            "{% if loop.first %}"  # 判断是否为循环的第一个元素  
-                f"{{{{ '{self.bos_token}' + '{self.rbos_token}' + message['role'] +  '{self.reos_token}' + message['content'] + '{self.eot_token}' }}}}"
-            "{% else %}"
-                f"{{{{'{self.rbos_token}' + message['role'] + '{self.reos_token}' + message['content'] + '{self.eot_token}'  }}}}"
-            "{% endif %}"
-            "{% if loop.last %}"  # 判断是否为循环的最后一个元素且需要添加生成提示  
-                f"{{{{'{self.rbos_token}' + message['role'] +  '{self.reos_token}' + message['content'] + '{self.eot_token}'  + '{self.eos_token}' }}}}"
-                "{%  if add_generation_prompt %}"
-                    f"{{{{ '{self.assistant}' }}}}"
+                "{% if loop.first %}"  # 判断是否为循环的第一个元素  
+                    f"{{{{ '{self.bos_token}' + '{self.rbos_token}' + message['role'] +  '{self.reos_token}' + message['content'] + '{self.eot_token}' }}}}"
+                "{% else %}"
+                    f"{{{{'{self.rbos_token}' + message['role'] + '{self.reos_token}' + message['content'] + '{self.eot_token}'  }}}}"
                 "{% endif %}"
-            "{% endif %}"
+                "{% if loop.last and message['role'] == 'assistant' %}"  # 判断是否为循环的最后一个元素且需要添加生成提示  
+                    f"{{{{ '{self.eos_token}' }}}}"
+                "{% endif %}"
             "{% endfor %}"
+            "{%  if add_generation_prompt %}"
+                f"{{{{ '{self.rbos_token}' + '{self.assistant}' + '{self.reos_token}' }}}}"
+            "{% endif %}"
         )
+
 
 FORMAT_MAPPING = {"chatml": ChatMlSpecialTokens}
 
