@@ -73,6 +73,10 @@ model_name_or_path： 由于utils.py中只针对llama-3设定了chat_template, �
 python test.py --path your-fine-tuning-model-path
 ```
 
+![image](https://github.com/user-attachments/assets/c054d458-2a90-4a13-b027-3cec2da08524)
+
+
+
 ## 参考
 
 https://medium.com/@xuebinbin12/fine-tuning-chat-based-llm-with-multi-turn-conversational-data-part-i-d8c64d01a20d   
