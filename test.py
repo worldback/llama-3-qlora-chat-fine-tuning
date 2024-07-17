@@ -1,9 +1,8 @@
 import argparse
-from transformers import AutoModelForCausalLM
 import torch
 from peft import AutoPeftModelForCausalLM
 from transformers import AutoTokenizer
-
+from utils import ChatMlSpecialTokens
 
 def get_model_and_tokenizer(model_id):
     model = AutoPeftModelForCausalLM.from_pretrained(model_id,
@@ -11,20 +10,19 @@ def get_model_and_tokenizer(model_id):
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     model.to(device)
     tokenizer = AutoTokenizer.from_pretrained(model_id)
-    # tokenizer.pad_token = "<pad>"
+    chat_format = ChatMlSpecialTokens()
+    tokenizer.chat_template = chat_format.chat_template
     return model, tokenizer, device
 
 def process_input(conv: list):
     format_data = tokenizer.apply_chat_template(conv, tokenize=False, add_generation_prompt=True)
-    print("format_data:\n", format_data)
-    return tokenizer(format_data, add_special_tokens=False)
-
+    res = tokenizer(format_data, return_tensors="pt")
+    return res['input_ids'], res["attention_mask"]
 
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Run Llama-3 model with optional fine-tuned model.")
-    parser.add_argument("--path", type=str, default="meta-llama/Llama-2-7b-chat-hf",
-                        help="The model ID or path to the fine-tuned model. Default is 'meta-llama/Llama-2-7b-hf'.")
+    parser.add_argument("--path", type=str,  help="The model ID or path to the fine-tuned model. Default is 'meta-llama/Llama-2-7b-hf'.")
     args = parser.parse_args()
     model_id = args.path
     model, tokenizer, device = get_model_and_tokenizer(model_id)
@@ -40,11 +38,13 @@ if __name__ == "__main__":
             if msg == "q":
                 break
             conv.append({"role": "user", "content": msg})
-            input_ids = process_input(conv)
+            input_ids, attention_mask = process_input(conv)
             if len(input_ids[0]) > 1024:
-                print("out of context window 2048, run over.")
+                print("out of context window 1024, run over.")
                 break
-            output = model.generate(input_ids=input_ids.to(device), max_new_tokens=300, num_return_sequences=1)
+            output = model.generate(input_ids=input_ids.to(device),
+                                    # attention_mask=attention_mask.to(device),
+                                    max_new_tokens=300, num_return_sequences=1)
             generated_text = tokenizer.decode(output[0], skip_special_tokens=True)
             prompt_length = len(tokenizer.decode(input_ids[0], skip_special_tokens=True))
             print(f"assistant:{generated_text[prompt_length:]}")
